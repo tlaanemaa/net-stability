@@ -105,7 +105,11 @@ export default function PingPlot() {
 
     handleResize();
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    screen.orientation.addEventListener("change", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      screen.orientation.removeEventListener("change", handleResize);
+    };
   }, []);
 
   const canvasRef = useRef(null);
