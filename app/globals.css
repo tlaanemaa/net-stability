@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 :root {
-  background-color: rgb(23 37 84)
+  background-color: rgb(23 37 84);
 }
 
+.red-text-glow {
+  color: #ff0000; /* Red color text */
+  text-shadow: 0 0 10px #ff0000; /* Horizontal offset, vertical offset, blur radius, color */
+}

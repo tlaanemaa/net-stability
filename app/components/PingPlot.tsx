@@ -116,5 +116,14 @@ export default function PingPlot() {
     drawPingPlot(canvas, pings);
   }, [pings, height, width]);
 
-  return <canvas ref={canvasRef} height={height} width={width}></canvas>;
+  return (
+    <div>
+      {pings.length <= 1 && (
+        <div className="fixed flex inset-0 items-center justify-center text-5xl text-red-700 red-text-glow">
+          Starting...
+        </div>
+      )}
+      <canvas ref={canvasRef} height={height} width={width}></canvas>
+    </div>
+  );
 }
