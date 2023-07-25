@@ -7,7 +7,7 @@ import { usePingStore } from "../store/pingStore";
 const PLOT_CONSTANTS = {
   verticalMargin: 0.1,
   xWidth: 0.95,
-  lineWidth: 10,
+  lineWidth: 5,
   lineColor: "red",
   gridColor: "darkred",
   gridWidth: 1,
