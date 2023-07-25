@@ -105,10 +105,12 @@ export default function PingPlot() {
 
     handleResize();
     window.addEventListener("resize", handleResize);
-    screen.orientation.addEventListener("change", handleResize);
+    const portrait = window.matchMedia("(orientation: portrait)");
+    portrait.addEventListener("change", handleResize);
+
     return () => {
       window.removeEventListener("resize", handleResize);
-      screen.orientation.removeEventListener("change", handleResize);
+      portrait.removeEventListener("change", handleResize);
     };
   }, []);
 
