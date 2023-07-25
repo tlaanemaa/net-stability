@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import { usePingStore } from "../store/pingStore";
 
-// TODO: USE ChartJS: https://www.npmjs.com/package/chart.js
+// TODO: Use ChartJS: https://www.npmjs.com/package/chart.js
 
 const PLOT_CONSTANTS = {
   verticalMargin: 0.1,
