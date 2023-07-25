@@ -1,5 +1,5 @@
-import Canvas from "./components/Canvas";
+import PingPlot from "./components/PingPlot";
 
 export default function Home() {
-  return <Canvas />;
+  return <PingPlot />;
 }
