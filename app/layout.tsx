@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "PingBeat",
   description: "Simple network analyzer",
+  themeColor: "#172554",
 };
 
 export default function RootLayout({
