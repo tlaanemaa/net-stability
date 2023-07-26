@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 const measureTime = async () => {
   const start = performance.now();
-  await fetch("/api/ping");
+  await fetch("/api/ping", { method: "HEAD" });
   return performance.now() - start;
 };
 

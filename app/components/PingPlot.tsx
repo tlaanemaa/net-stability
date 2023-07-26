@@ -13,7 +13,18 @@ const PLOT_CONSTANTS = {
   gridWidth: 1,
   labelColor: "red",
   labelFont: "14px Arial",
-  labelPadding: 5, // Padding from the right edge of the canvas
+  labelPadding: 5, // Padding from the right edge of the canvas,
+  gridSizes: [
+    { range: 20000, size: 10000 },
+    { range: 10000, size: 5000 },
+    { range: 2000, size: 1000 },
+    { range: 1000, size: 500 },
+    { range: 200, size: 100 },
+    { range: 100, size: 50 },
+    { range: 20, size: 10 },
+    { range: 10, size: 5 },
+    { range: 0, size: 1 }, // Default size
+  ],
 } as const;
 
 const drawPingPlot = (canvas: HTMLCanvasElement, pings: number[]) => {
@@ -33,16 +44,8 @@ const drawPingPlot = (canvas: HTMLCanvasElement, pings: number[]) => {
   const range = maxPing - minPing; // Range of ping values
 
   // Determine the grid size based on the range
-  let gridSize;
-  if (range > 200) {
-    gridSize = 100;
-  } else if (range > 100) {
-    gridSize = 50;
-  } else if (range > 20) {
-    gridSize = 10;
-  } else {
-    gridSize = 5;
-  }
+  const gridSize =
+    PLOT_CONSTANTS.gridSizes.find((size) => range > size.range)?.size ?? 1;
 
   // Calculate the scaling factors for x and y axes
   const xScale =
