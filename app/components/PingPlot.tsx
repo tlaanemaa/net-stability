@@ -6,7 +6,7 @@ import { usePingStore } from "../store/pingStore";
 
 const PLOT_CONSTANTS = {
   verticalMargin: 0.1,
-  xWidth: 0.95,
+  rightMargin: 50, //px
   lineWidth: 5,
   lineColor: "red",
   gridColor: "darkred",
@@ -15,14 +15,19 @@ const PLOT_CONSTANTS = {
   labelFont: "14px Arial",
   labelPadding: 5, // Padding from the right edge of the canvas,
   gridSizes: [
-    { range: 20000, size: 10000 },
-    { range: 10000, size: 5000 },
-    { range: 2000, size: 1000 },
-    { range: 1000, size: 500 },
-    { range: 200, size: 100 },
-    { range: 100, size: 50 },
-    { range: 20, size: 10 },
-    { range: 10, size: 5 },
+    { range: 60000, size: 20000 },
+    { range: 30000, size: 10000 },
+    { range: 15000, size: 5000 },
+    { range: 6000, size: 2000 },
+    { range: 3000, size: 1000 },
+    { range: 1500, size: 500 },
+    { range: 600, size: 200 },
+    { range: 300, size: 100 },
+    { range: 150, size: 50 },
+    { range: 60, size: 20 },
+    { range: 30, size: 10 },
+    { range: 15, size: 5 },
+    { range: 6, size: 2 },
     { range: 0, size: 1 }, // Default size
   ],
 } as const;
@@ -49,7 +54,7 @@ const drawPingPlot = (canvas: HTMLCanvasElement, pings: number[]) => {
 
   // Calculate the scaling factors for x and y axes
   const xScale =
-    (canvas.width * PLOT_CONSTANTS.xWidth) / Math.max(pings.length - 1, 1);
+    (canvas.width - PLOT_CONSTANTS.rightMargin) / Math.max(pings.length - 1, 1);
   const yScale = (canvas.height - 2 * margin) / (range || 1);
 
   // Add a glow effect
