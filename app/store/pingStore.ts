@@ -1,14 +1,29 @@
 import { create } from "zustand";
 
-const measureTime = async () => {
+export interface Ping {
+  ts: Date;
+  latency: number;
+  error: boolean;
+}
+
+const measureTime = async (): Promise<Ping> => {
+  const ts = new Date();
+  let error = false;
   const start = performance.now();
-  await fetch("/api/ping", { method: "HEAD" });
-  return performance.now() - start;
+
+  try {
+    await fetch("/api/ping", { method: "HEAD" });
+  } catch (e) {
+    error = true;
+  }
+
+  const end = performance.now();
+  return { ts, error, latency: end - start };
 };
 
 interface PingState {
-  pings: number[];
-  addPing(value: number): void;
+  pings: Ping[];
+  addPing(value: Ping): void;
 
   timer: null | NodeJS.Timeout;
   startPinging(): void;
@@ -18,7 +33,7 @@ interface PingState {
 export const usePingStore = create<PingState>((set, get) => ({
   pings: [],
 
-  addPing(value: number) {
+  addPing(value: Ping) {
     set((state) => ({ pings: [...state.pings, value] }));
   },
 

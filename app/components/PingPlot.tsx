@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
-import { usePingStore } from "../store/pingStore";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { Ping, usePingStore } from "../store/pingStore";
 
 // TODO: Use ChartJS: https://www.npmjs.com/package/chart.js
 
@@ -30,9 +30,20 @@ const PLOT_CONSTANTS = {
     { range: 6, size: 2 },
     { range: 0, size: 1 }, // Default size
   ],
+  xLabelInterval: 5, // Show a label for every 5th ping
+  xLabelColor: "red",
+  xLabelFont: "14px Arial",
+  xLabelPadding: 10, // Padding from the bottom edge of the canvas
+  maxLabels: 8, // Maximum number of x-axis labels
+  errorMarkerText: "💀",
+  errorMarkerFont: "24px Arial",
+  errorMarkerColor: "red",
 } as const;
 
-const drawPingPlot = (canvas: HTMLCanvasElement, pings: number[]) => {
+const drawPingPlot = (canvas: HTMLCanvasElement, rawPings: Ping[]) => {
+  // Sort the pings array by timestamp
+  const pings = rawPings.sort((a, b) => a.ts.getTime() - b.ts.getTime());
+
   const ctx = canvas.getContext("2d")!;
   ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 
@@ -42,8 +53,8 @@ const drawPingPlot = (canvas: HTMLCanvasElement, pings: number[]) => {
   let maxPing = -Infinity,
     minPing = Infinity;
   for (let i = 0; i < pings.length; i++) {
-    maxPing = pings[i] > maxPing ? pings[i] : maxPing;
-    minPing = pings[i] < minPing ? pings[i] : minPing;
+    maxPing = pings[i].latency > maxPing ? pings[i].latency : maxPing;
+    minPing = pings[i].latency < minPing ? pings[i].latency : minPing;
   }
 
   const range = maxPing - minPing; // Range of ping values
@@ -57,15 +68,16 @@ const drawPingPlot = (canvas: HTMLCanvasElement, pings: number[]) => {
     (canvas.width - PLOT_CONSTANTS.rightMargin) / Math.max(pings.length - 1, 1);
   const yScale = (canvas.height - 2 * margin) / (range || 1);
 
-  // Add a glow effect
-  ctx.shadowColor = "red";
-  ctx.shadowBlur = 10;
-
   // Calculate y-coordinates for all pings
   const yCoordinates = new Array(pings.length);
   for (let i = 0; i < pings.length; i++) {
-    yCoordinates[i] = canvas.height - margin - (pings[i] - minPing) * yScale;
+    yCoordinates[i] =
+      canvas.height - margin - (pings[i].latency - minPing) * yScale;
   }
+
+  // Turn on the glow effect
+  ctx.shadowColor = "red";
+  ctx.shadowBlur = 10;
 
   // Draw the grid lines and labels
   ctx.beginPath();
@@ -99,31 +111,80 @@ const drawPingPlot = (canvas: HTMLCanvasElement, pings: number[]) => {
   ctx.lineWidth = PLOT_CONSTANTS.lineWidth; // Make the line thicker
   ctx.strokeStyle = PLOT_CONSTANTS.lineColor; // Set the line color
   ctx.stroke(); // Draw the line
+
+  // Draw the x-axis labels
+  ctx.textAlign = "center";
+  ctx.fillStyle = PLOT_CONSTANTS.xLabelColor;
+  ctx.font = PLOT_CONSTANTS.xLabelFont;
+
+  // Calculate the interval between labels
+  const labelInterval = Math.max(
+    Math.round(pings.length / PLOT_CONSTANTS.maxLabels),
+    1
+  );
+
+  for (let i = 0; i < pings.length; i += labelInterval) {
+    const x = i * xScale;
+
+    // Adjust the text alignment based on the position
+    if (i === 0) {
+      ctx.textAlign = "left";
+    } else {
+      ctx.textAlign = "center";
+    }
+
+    ctx.fillText(
+      pings[i].ts.toLocaleTimeString(),
+      x,
+      canvas.height - PLOT_CONSTANTS.xLabelPadding
+    );
+  }
+
+  // Turn off the glow effect
+  ctx.shadowColor = "transparent";
+  ctx.shadowBlur = 0;
+
+  // Draw the error markers
+  ctx.font = PLOT_CONSTANTS.errorMarkerFont; // Adjust the size as needed
+  ctx.fillStyle = PLOT_CONSTANTS.errorMarkerColor; // Set the color to red
+  ctx.textAlign = "center";
+  for (let i = 0; i < pings.length; i++) {
+    if (pings[i].error) {
+      const x = i * xScale;
+      const y = yCoordinates[i];
+      ctx.fillText(PLOT_CONSTANTS.errorMarkerText, x, y);
+    }
+  }
 };
 
+// React component PingPlot
 export default function PingPlot() {
   const [height, setHeight] = useState(600);
   const [width, setWidth] = useState(800);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setHeight(window.innerHeight);
-      setWidth(window.innerWidth);
-    };
+  const handleResize = useCallback(() => {
+    setHeight(window.innerHeight);
+    setWidth(window.innerWidth);
+  }, []);
 
+  useEffect(() => {
     handleResize();
     window.addEventListener("resize", handleResize);
     const portrait = window.matchMedia("(orientation: portrait)");
-    portrait.addEventListener("change", handleResize);
+    portrait.addEventListener("change", () => {
+      // Add a delay to ensure the orientation change is complete before resizing
+      setTimeout(handleResize, 200);
+    });
 
     return () => {
       window.removeEventListener("resize", handleResize);
       portrait.removeEventListener("change", handleResize);
     };
-  }, []);
+  }, [handleResize]);
 
   const canvasRef = useRef(null);
   const pings = usePingStore((state) => state.pings);
+
   useEffect(() => {
     if (!canvasRef.current) return;
     const canvas: HTMLCanvasElement = canvasRef.current;
