@@ -13,9 +13,9 @@ export default function Intro() {
           Welcome to PingBeat - Your Personal Network Latency Dashboard
         </h1>
         <p className="text-center">
-          Ever wondered about your network's reliability? PingBeat is here to
-          help! Our tool sends a HEAD request to the closest edge server every
-          second, measuring the latency and plotting the results on a
+          Ever wondered about your network&apos;s reliability? PingBeat is here
+          to help! Our tool sends a HEAD request to the closest edge server
+          every second, measuring the latency and plotting the results on a
           user-friendly line graph. With PingBeat, you gain a real-time, simple,
           yet comprehensive overview of your network stability.
         </p>
