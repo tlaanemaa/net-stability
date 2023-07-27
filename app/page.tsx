@@ -1,5 +1,11 @@
+import Intro from "./components/Intro";
 import PingPlot from "./components/PingPlot";
 
 export default function Home() {
-  return <PingPlot />;
+  return (
+    <div>
+      <Intro />
+      <PingPlot />
+    </div>
+  );
 }

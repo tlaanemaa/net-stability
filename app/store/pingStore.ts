@@ -41,10 +41,3 @@ export const usePingStore = create<PingState>((set, get) => ({
     set(() => ({ timer: null }));
   },
 }));
-
-/**
- * Only start the pinger on frontend
- */
-if (typeof window !== "undefined") {
-  usePingStore.getState().startPinging();
-}
