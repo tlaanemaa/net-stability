@@ -13,7 +13,7 @@ export default function Intro() {
           Welcome to PingBeat!
         </h1>
         <p className="text-center text-xl">
-          Curious about your network's reliability? PingBeat has got you
+          Curious about your network&apos;s reliability? PingBeat has got you
           covered! It sends a HEAD request to the closest edge server every
           second, measures the latency, and plots the results on an intuitive
           line graph. Gain a real-time, simple, and comprehensive view of your
