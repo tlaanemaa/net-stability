@@ -8,7 +8,7 @@ export default function Intro() {
 
   return (
     <div className="fixed flex inset-0 bg-main-color justify-center items-center z-10">
-      <div className="max-w-screen-md rounded-md bg-main-color p-6 m-4 text-accent-color shadow-lg">
+      <div className="max-w-screen-md rounded-md bg-main-color p-6 m-4 text-accent-color">
         <h1 className="text-4xl text-center mb-5 font-bold text-accent-color">
           Welcome to PingBeat!
         </h1>
