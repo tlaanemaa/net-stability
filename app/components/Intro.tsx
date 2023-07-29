@@ -7,26 +7,26 @@ export default function Intro() {
   if (started) return null;
 
   return (
-    <div className="fixed flex inset-0 bg-opacity-30 bg-black justify-center items-center z-10">
-      <div className="max-w-screen-md border-2 rounded-md border-red-700 bg-blue-950 p-4 m-4 text-red-700 red-text-glow">
-        <h1 className="text-2xl text-center mb-3">
-          Welcome to PingBeat - Your Personal Network Latency Dashboard
+    <div className="fixed flex inset-0 bg-main-color justify-center items-center z-10">
+      <div className="max-w-screen-md rounded-md bg-main-color p-6 m-4 text-accent-color shadow-lg">
+        <h1 className="text-4xl text-center mb-5 font-bold text-accent-color">
+          Welcome to PingBeat!
         </h1>
-        <p className="text-center">
-          Ever wondered about your network&apos;s reliability? PingBeat is here
-          to help! Our tool sends a HEAD request to the closest edge server
-          every second, measuring the latency and plotting the results on a
-          user-friendly line graph. With PingBeat, you gain a real-time, simple,
-          yet comprehensive overview of your network stability.
+        <p className="text-center text-xl">
+          Curious about your network's reliability? PingBeat has got you
+          covered! It sends a HEAD request to the closest edge server every
+          second, measures the latency, and plots the results on an intuitive
+          line graph. Gain a real-time, simple, and comprehensive view of your
+          network stability with PingBeat.
         </p>
-        <p className="text-center mt-3">
-          Failed requests are marked with a 💀 symbol.
+        <p className="text-center mt-5 text-lg">
+          Note: Failed requests are marked with a 💀 symbol.
         </p>
         <button
-          className="bg-blue-900 hover:bg-blue-800 active:bg-blue-700 mt-5 w-full rounded-md p-2 transition duration-200 ease-in-out transform text-xl red-text-glow"
+          className="bg-accent-color hover:bg-faded-accent-color active:bg-faded-accent-color mt-6 w-full rounded-md p-3 transition duration-200 ease-in-out transform text-2xl font-bold shadow-md border-accent-color text-main-color"
           onClick={start}
         >
-          Get Started
+          Start Now
         </button>
       </div>
     </div>
