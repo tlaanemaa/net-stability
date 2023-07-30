@@ -17,7 +17,7 @@ module.exports = {
         "accent-color": "#FF0000", // bright glowing red
         "faded-accent-color": "#CC0000", // subtly darker red for hover effects
         "grid-color": "#273c75", // a darker blue for a more subtle grid
-        "grid-label-color": "#BFC0C0", // a light gray-blue for readable labels
+        "grid-label-color": "#6f7f99", // a slightly lighter blue for more subtle labels
         // Add more colors as per your needs
       },
       // You can also extend other styling options like spacing, border radius, etc.
