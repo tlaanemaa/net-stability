@@ -23,37 +23,41 @@ export class Plot {
     gridColor: COLORS.grid,
     gridWidth: 1,
     labelColor: COLORS.gridLabel,
-    labelFont: "14px Arial",
+    labelFont: "1.5rem Arial",
     labelPadding: 5, // Padding from the right edge of the canvas,
-    gridSizes: [
-      { range: 60000, size: 20000 },
-      { range: 30000, size: 10000 },
-      { range: 15000, size: 5000 },
-      { range: 6000, size: 2000 },
-      { range: 3000, size: 1000 },
-      { range: 1500, size: 500 },
-      { range: 600, size: 200 },
-      { range: 300, size: 100 },
-      { range: 150, size: 50 },
-      { range: 60, size: 20 },
-      { range: 30, size: 10 },
-      { range: 15, size: 5 },
-      { range: 6, size: 2 },
-      { range: 0, size: 1 }, // Default size
-    ],
+    approxGridLineCount: 5,
     xLabelInterval: 5, // Show a label for every 5th ping
     xLabelColor: COLORS.gridLabel,
-    xLabelFont: "14px Arial",
+    xLabelFont: "1.5rem Arial",
     xLabelPadding: 10, // Padding from the bottom edge of the canvas
-    maxLabels: 8, // Maximum number of x-axis labels
+    maxLabels: 10, // Maximum number of x-axis labels
     errorMarkerText: "💀",
-    errorMarkerFont: "24px Arial",
+    errorMarkerFont: "1.5rem Arial",
     errorMarkerColor: COLORS.accent,
     glowColor: COLORS.accent,
     glowBlur: 10,
   } as const;
 
   constructor(private readonly canvas: HTMLCanvasElement) {}
+
+  private roundToNearestFive(num: number): number {
+    return Math.round(num / 5) * 5;
+  }
+
+  private roundToPleasantNumber(num: number): number {
+    let magnitude = Math.pow(10, Math.floor(Math.log10(num)));
+    let remainder = num / magnitude;
+
+    if (remainder < 1.5) {
+      return magnitude;
+    } else if (remainder < 3.5) {
+      return 2 * magnitude;
+    } else if (remainder < 7.5) {
+      return 5 * magnitude;
+    } else {
+      return 10 * magnitude;
+    }
+  }
 
   public draw(rawPings: Ping[]) {
     // Sort the pings array by timestamp
@@ -75,8 +79,9 @@ export class Plot {
     const range = maxPing - minPing; // Range of ping values
 
     // Determine the grid size based on the range
-    const gridSize =
-      this.config.gridSizes.find((size) => range > size.range)?.size ?? 1;
+    const gridSize = this.roundToPleasantNumber(
+      range / this.config.approxGridLineCount
+    ); // Adjust the divisor as needed
 
     // Calculate the scaling factors for x and y axes
     const xScale =
@@ -138,9 +143,9 @@ export class Plot {
     ctx.font = this.config.xLabelFont;
 
     // Calculate the interval between labels
-    const labelInterval = Math.max(
-      Math.round(pings.length / this.config.maxLabels),
-      1
+    const maxLabels = Math.min(this.config.maxLabels, this.canvas.width / 200);
+    const labelInterval = this.roundToNearestFive(
+      Math.max(Math.round(pings.length / maxLabels), 1)
     );
 
     for (let i = 0; i < pings.length; i += labelInterval) {

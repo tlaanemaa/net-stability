@@ -10,8 +10,9 @@ export default function PingPlot() {
   const [width, setWidth] = useState(800);
 
   const handleResize = useCallback(() => {
-    setHeight(window.innerHeight);
-    setWidth(window.innerWidth);
+    const dpr = window.devicePixelRatio || 1;
+    setHeight(window.innerHeight * dpr);
+    setWidth(window.innerWidth * dpr);
   }, []);
 
   useEffect(() => {
@@ -42,7 +43,12 @@ export default function PingPlot() {
   return (
     <div>
       <WarmupBanner />
-      <canvas ref={canvasRef} height={height} width={width}></canvas>
+      <canvas
+        ref={canvasRef}
+        className="w-full h-full"
+        height={height}
+        width={width}
+      ></canvas>
     </div>
   );
 }
