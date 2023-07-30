@@ -60,6 +60,8 @@ export class Plot {
   }
 
   public draw(rawPings: Ping[]) {
+    if (rawPings.length < 1) return;
+
     // Sort the pings array by timestamp
     const pings = rawPings.sort((a, b) => a.ts.getTime() - b.ts.getTime());
 
@@ -143,10 +145,8 @@ export class Plot {
     ctx.font = this.config.xLabelFont;
 
     // Calculate the interval between labels
-    const maxLabels = Math.min(this.config.maxLabels, this.canvas.width / 200);
-    const labelInterval = this.roundToNearestFive(
-      Math.max(Math.round(pings.length / maxLabels), 1)
-    );
+    const maxLabels = Math.min(this.config.maxLabels, this.canvas.width / 250);
+    const labelInterval = Math.round(Math.max(pings.length / maxLabels, 1));
 
     for (let i = 0; i < pings.length; i += labelInterval) {
       const x = i * xScale;
