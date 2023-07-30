@@ -32,7 +32,7 @@ export class Plot {
     xLabelPadding: 10, // Padding from the bottom edge of the canvas
     maxLabels: 10, // Maximum number of x-axis labels
     errorMarkerText: "💀",
-    errorMarkerFont: "1.5rem Arial",
+    errorMarkerFont: "2.5rem Arial",
     errorMarkerColor: COLORS.accent,
     glowColor: COLORS.accent,
     glowBlur: 10,
