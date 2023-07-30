@@ -18,7 +18,7 @@ export class Plot {
   private readonly config = {
     verticalMargin: 0.1,
     rightMargin: 50, //px
-    lineWidth: 5,
+    lineWidth: 7,
     lineColor: COLORS.accent,
     gridColor: COLORS.grid,
     gridWidth: 1,
